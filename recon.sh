@@ -62,7 +62,14 @@ nslookup $hostName >> $dirOutput/$dimOutput
 
 echo "########################\n   nikto in process...\n########################\n"
 # Put statement to change port if p=443!
+if grep -q '443/' $dirOutput/$nmapOutput; then
+nikto -host $hostName -p 443 >> $dirOutput/"443Port_"$niktoFile
+fi
+
+if grep -q '80/' $dirOutput/$nmapOutput; then
 nikto -host $hostName -p $port >> $dirOutput/$niktoFile
+fi
+
 
 echo "########################\n   Search exploits in process...\n########################\n"
 for i in $(seq 1 15);   do
