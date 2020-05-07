@@ -30,11 +30,13 @@ neofetch
 hostName=$1
 workingDir=$2
 dirOutput=$workingDir"/"$hostName"_recon/"
+nmapOutput=$hostName"_nmap_recon.out"
 dimOutput=$hostName"_dmitry.out"
 emailAddr=$hostName"_email.txt"
 subdom=$hostName"_subdomains.txt"
 niktoFile=$hostName"_nikto.txt"
 port=80
+searchploitFile=$hostName"_exploitFound.txt"
 
 mkdir $dirOutput
 
@@ -46,7 +48,7 @@ fi
 
 
 echo "########################\n   nmap in process...\n########################\n"
-nmap -A -T4 -p- $hostName >> $dirOutput/nmap_recon.out
+nmap -A -T4 -p- $hostName >> $dirOutput/$nmapOutput
 
 echo "########################\n   dmitry and nslookup\n      in process...\n########################\n"
 echo "########################\n   dmitry Output \n########################\n" > $dirOutput/$dimOutput
@@ -61,3 +63,16 @@ nslookup $hostName >> $dirOutput/$dimOutput
 echo "########################\n   nikto in process...\n########################\n"
 # Put statement to change port if p=443!
 nikto -host $hostName -p $port >> $dirOutput/$niktoFile
+
+echo "########################\n   Search exploits in process...\n########################\n"
+for i in $(seq 1 15);   do
+searchsploit $(cat $dirOutput/$nmapOutput | cut -b 22-28 | sed -n "$i p") >> $dirOutput/$searchploitFile;   
+done
+
+
+
+
+
+
+
+
